@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>Grey Budgeting</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#00032e"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet"><script>window._bip=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window._bip=e})</script><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#00032e"><link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#faf8f5;--card:#fff;--tx:#222;--mu:#777;--bd:#e6e1da;--ac:#6d4aff;--pr:#2f6fed;--ok:#1f9d55;--no:#d64545;--pe:#d98a00}
@@ -352,7 +352,7 @@ function start(){if(started)return;started=true;try{if(!sessionStorage.boot){ses
  db.collection(H('budget')).onSnapshot(q=>{buds={};q.docs.forEach(d=>{const x=d.data();buds[d.id]={...E0(),...x}});render()});
  db.doc(H('meta/settings')).onSnapshot(d=>{if(d.exists)set={...set,...d.data()};render()});db.doc(H('meta/debts')).onSnapshot(d=>{debts=d.exists?(d.data().list||[]):[];render()});db.doc(H('meta/savings')).onSnapshot(d=>{if(d.exists)pots=d.data().list||[];else pots=[];render()});
  setInterval(notify,60000);setInterval(()=>{if(tab==='sch'||tab==='shr')render()},60000);if('Notification' in window&&Notification.permission==='granted')enablePush(true)}
-let dip=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;render()});window.addEventListener('appinstalled',()=>{dip=null;render()});
+let dip=window._bip||null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;render()});window.addEventListener('appinstalled',()=>{dip=null;render()});
 const isApp=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true,isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
 function instCard(){if(isApp())return'';return`<div class="card"><div class="row"><span class="sp"><b>Install this app</b><br><span class="mu">${isIOS()&&!dip?'On iPhone: tap the Share button, then Add to Home Screen.':'Adds an icon to your home screen.'}</span></span>${isIOS()&&!dip?'':'<button class="b" onclick="doInstall()">Install app</button>'}</div></div>`}
 async function doInstall(){if(dip){dip.prompt();await dip.userChoice;dip=null;render();return}
