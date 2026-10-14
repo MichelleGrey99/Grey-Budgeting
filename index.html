@@ -267,7 +267,7 @@ function askNo(id,s){sheet(`<h3>Not completed</h3><label>Reason (optional)</labe
 function setSt(id,s,st,reason){const c=classes.find(x=>x.id===id),k='a_'+id+'_'+s;closeSheet();if(!st)return col().doc(k).delete();save(k,{status:st,reason:reason||'',rate:c.rate,per:c.per||'hour',n:occ(c,s.slice(0,7)).length,hrs:hrs(c,s),cur:c.cur,at:Date.now()})}
 const payS=v=>save('p_'+cur,{amt:v});
 const setS=o=>{set={...set,...o};db.doc(H('meta/settings')).set(set)};
-function pick(n){const el=$('#who_n');n=(n||(el&&el.value)||'').trim();if(!n)return alert('Please enter your name');if(Object.entries(profiles).some(([i,p])=>i!==uid&&(p.name||'').toLowerCase()===n.toLowerCase()))return alert('That name is already used in this household. Please use a different name.');db.doc(H('members/'+uid)).set({name:n,at:Date.now()}).then(()=>{me={name:n};start();handleLink();render()}).catch(e=>alert('Could not register: '+e.message))}
+function pick(n){const el=$('#who_n');n=(n||(el&&el.value)||'').trim();if(!n)return alert('Please enter your name');if(Object.entries(profiles).some(([i,p])=>i!==uid&&(p.name||'').toLowerCase()===n.toLowerCase()))return alert('That name is already used in this household. Please use a different name.');db.doc(H('members/'+uid)).set({name:n}).then(()=>{me={name:n};start();handleLink();render()}).catch(e=>alert('Could not register: '+e.message))}
 function bud(){return buds[cur]?JSON.parse(JSON.stringify(buds[cur])):E0()}
 function bsave(b){buds[cur]=b;db.doc(H('budget/'+cur)).set(b)}
 function bset(k,i,fl,v){const b=bud();b[k][i][fl]=v;bsave(b);render()}
