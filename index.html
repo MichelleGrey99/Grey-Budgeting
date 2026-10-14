@@ -129,7 +129,7 @@ function vTrk(){const q=f.q.toLowerCase();let list=classes.filter(c=>(!f.q||(c.c
  const isP=c=>c.kind==='pvt'||/^\s*pvt/i.test(c.company||''),fl=list.map(c=>[c,occ(c,cur)]).filter(([c,o])=>o.length&&(!f.st||o.some(s=>status(c,s)===f.st))),mk=([c,o])=>`<div class="card" style="${c.until?'opacity:.6':''}"><div class="row"><b class="sp">${esc(c.code)}</b><button class="g b" onclick="editC('${c.id}')">Edit</button></div><div class="mu">${esc(c.company)} · ${slotTxt(c,o)} · ${slotsOf(c).reduce((a,x)=>a+(tm(x.en)-tm(x.st))/60,0).toFixed(2)}h/wk · ${c.rate} ${c.cur}/${c.per==='month'?'month':'h'}${c.until?' · inactive':''}${c.recur===false?' · once':''}</div><div class="chips">${o.map(s=>{const st=status(c,s);return`<button class="chip ${st}" onclick="askSt('${c.id}','${s}')">${DS[new Date(s+'T12:00').getDay()]} ${+s.slice(8)}</button>`}).join('')}</div></div>`,cA=fl.filter(x=>!isP(x[0])).map(mk).join(''),cP=fl.filter(x=>isP(x[0])).map(mk).join('');
  return`<h2>${esc(me.name)}'s classes</h2>${mnav()}<div class="card"><div class="row"><span class="sp mu">Completed</span><b>${money(t.done)} · ${t.dh}h</b></div><div class="row"><span class="sp mu">Predicted</span><b>${money(t.pred)} · ${t.ph}h</b></div><div class="row"><span class="sp mu">Cancelled</span><b>${t.ch}h</b></div><div class="row" style="margin-top:6px"><span class="sp mu">Payment received (R)</span><input type="number" style="width:110px" value="${pay.amt||''}" onchange="payS(+this.value)"></div><div class="mu">Still to receive: ${money(t.done-(pay.amt||0))}</div></div>
  <div class="row"><input class="sp" placeholder="Search code / company" value="${esc(f.q)}" oninput="f.q=this.value;clearTimeout(window._t);window._t=setTimeout(render,400)"><select onchange="f.day=this.value;render()"><option value="">Day</option>${DO.map(d=>`<option value="${d}" ${f.day==d?'selected':''}>${DN[d].slice(0,3)}</option>`).join('')}</select><select onchange="f.st=this.value;render()"><option value="">Status</option>${['predicted','completed','cancelled','pending'].map(s=>`<option value="${s}" ${f.st===s?'selected':''}>${s}</option>`).join('')}</select></div>
- <p class="row"><button class="b" onclick="editC()">+ Add class</button><span class="mu">A–Z by code</span></p><div class="cols2"><div><h3>ASTEX students</h3>${cA||'<p class="mu">None this month</p>'}</div><div><h3>Private students</h3>${cP||'<p class="mu">None this month</p>'}</div></div>`}
+ <p class="row"><button class="b" onclick="editC()">+ Add class</button><button class="g b" onclick="$('#shotIn').click()">📷 Import from screenshot</button><input type="file" id="shotIn" accept="image/*" style="display:none" onchange="importShot(this.files[0]);this.value=''"><span class="mu">A–Z by code</span></p><div class="cols2"><div><h3>ASTEX students</h3>${cA||'<p class="mu">None this month</p>'}</div><div><h3>Private students</h3>${cP||'<p class="mu">None this month</p>'}</div></div>`}
 let bsub='main';
 const E0=()=>({income:[],expenses:[],savings:[],pincome:[],pexpenses:[],pst:{},ast:{},hk:[],debt:[]}),sm=(l)=>(l||[]).reduce((a,e)=>a+(+e.amt||0),0),totE=B=>sm(B.expenses)+sm(B.pexpenses)+hkAmt(B)+sm(B.savings)+sm(B.debt);
 function vBud(){const B=buds[cur]||E0(),pv=bsub==='pvt',ik=pv?'pincome':'income',ek=pv?'pexpenses':'expenses',IL=B[ik]||[],EL=B[ek]||[],AU=pv?[]:autoRows(),APV=pv?autoPvt():[],I=sm(IL)+(pv?autoPv():autoMain()),E=sm(EL)+(pv?0:hkAmt(B)),P=sm(EL.filter(e=>e.paid))+(!pv&&B.hkPaid?hkAmt(B):0),S=sm(B.savings),Dt=sm(B.debt),BAL=I-E-(pv?0:S+Dt);
@@ -259,6 +259,69 @@ function saveC(id){const v=i=>$('#f_'+i).value,rec=v('rec')==='1',old=classes.fi
  if(fs.some(x=>!x.st||!x.en||tm(x.en)<=tm(x.st)))return alert('Each day needs a start time and an end time after it');if(rec&&new Set(fs.map(x=>x.dow)).size<fs.length)return alert('Each day can only be listed once');
  const d={...old,code:v('code').trim(),company:v('kind')==='pvt'?'PVT STUDENT':v('co').trim(),kind:v('kind'),tz:v('tz'),slots:fs.map(x=>({...x})),dow:fs[0].dow,st:fs[0].st,en:fs[0].en,rate:+v('rate'),per:v('per'),cur:v('cur'),notes:v('n'),recur:rec,from:rec?v('from'):null,once:rec?null:v('from')};delete d.id;delete d.dow2;delete d.st2;delete d.en2;
  const nid=id||'c_'+Date.now().toString(36);save(nid,d);closeSheet()}
+
+/* ---- Import classes from a screenshot (OCR runs on the phone) ---- */
+let _tj=null,_imp=[];
+function loadTess(){return _tj||(_tj=new Promise((ok,no)=>{if(window.Tesseract)return ok(window.Tesseract);const e=document.createElement('script');e.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';e.onload=()=>ok(window.Tesseract);e.onerror=()=>{_tj=null;no(new Error('Could not load the text reader. Please check your internet connection.'))};document.head.appendChild(e)}))}
+const shotMsg=(t,p)=>sheet(`<h3>Import from screenshot</h3><p class="mu">${t}</p>${p!=null?`<div style="height:10px;border-radius:5px;background:var(--bd)"><div style="height:10px;border-radius:5px;background:var(--ac,#9b86ff);width:${Math.round(p*100)}%"></div></div>`:''}`);
+function shotCanvas(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(3,Math.max(1,2000/im.width)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.filter='grayscale(1) contrast(1.3)';x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c)};im.onerror=()=>no(new Error('Could not open that image'));im.src=u})}
+function shotWords(d){let w=d.words;if(!w||!w.length){w=[];for(const b of d.blocks||[])for(const p of b.paragraphs||[])for(const l of p.lines||[])for(const q of l.words||[])w.push(q)}return w}
+function parseShot(words){
+ const W=words.filter(w=>w.text&&w.text.trim()&&w.bbox).map(w=>({t:w.text.trim(),x0:w.bbox.x0,x1:w.bbox.x1,y0:w.bbox.y0,y1:w.bbox.y1}));
+ W.forEach(w=>{w.cx=(w.x0+w.x1)/2;w.cy=(w.y0+w.y1)/2});
+ if(!W.length)return{err:'No text was found in the image.'};
+ const hs=W.map(w=>w.y1-w.y0).sort((a,b)=>a-b),mh=hs[Math.floor(hs.length/2)]||10;
+ const hc=W.find(w=>/^company$/i.test(w.t));if(!hc)return{err:'I could not find the table header. Please include the header row (Type, Company, Code, Day(s)) in the screenshot.'};
+ const near=re=>W.filter(w=>re.test(w.t)&&Math.abs(w.cy-hc.cy)<mh*1.6).sort((a,b)=>Math.abs(a.cx-hc.cx)-Math.abs(b.cx-hc.cx));
+ const hk=near(/^code$/i).find(w=>w.cx>hc.cx),hd=near(/^day/i).find(w=>hk&&w.cx>hk.cx),ht=near(/^type$/i).find(w=>w.cx<hc.cx);
+ if(!hk||!hd)return{err:'I could not find the Code and Day(s) headers. Please include the full header row in the screenshot.'};
+ const b1=ht?ht.cx+.3*(hc.cx-ht.cx):hc.cx-.5*(hk.cx-hc.cx),b2=(hc.cx+hk.cx)/2,b3=(hk.cx+hd.cx)/2,top=Math.max(hc.y1,hk.y1,hd.y1);
+ const tw=W.filter(w=>/\d{1,2}\s*[:.;,]\s*\d{2}/.test(w.t)),right=tw.length?Math.max(...tw.map(w=>w.x1))+mh:Infinity;
+ const body=W.filter(w=>w.y0>top&&w.x0<=right);
+ const left=body.filter(w=>w.cx>=b1&&w.cx<b3).sort((a,b)=>a.cy-b.cy),cl=[];
+ for(const w of left){const c=cl[cl.length-1];if(c&&w.y0-c.y1<=mh*1.2){c.w.push(w);c.y1=Math.max(c.y1,w.y1)}else cl.push({w:[w],y0:w.y0,y1:w.y1})}
+ cl.forEach(c=>c.cy=(c.y0+c.y1)/2);
+ const dayW=body.filter(w=>w.cx>=b3);for(const w of dayW){let b=null,bd=1e9;for(const c of cl){const d=Math.abs(c.cy-w.cy);if(d<bd){bd=d;b=c}}if(b&&bd<mh*5)(b.d=b.d||[]).push(w)}
+ const txt=ws=>{ws=[...ws].sort((a,b)=>a.cy-b.cy);const ls=[];for(const w of ws){const l=ls[ls.length-1];if(l&&Math.abs(w.cy-l.cy)<mh*.6){l.w.push(w)}else ls.push({cy:w.cy,w:[w]})}return ls.map(l=>l.w.sort((a,b)=>a.cx-b.cx).map(x=>x.t).join(' ')).join(' ').replace(/\s+/g,' ').trim()};
+ const DM={mo:1,tu:2,we:3,th:4,fr:5,sa:6,su:0},p2=n=>String(n).padStart(2,'0'),rows=[];let skipped=0;
+ for(const c of cl){
+  const code=txt(c.w.filter(w=>w.cx>=b2)),company=txt(c.w.filter(w=>w.cx<b2));
+  const dt=txt(c.d||[]).replace(/(\d)[Oo]/g,'$10').replace(/[Oo](\d)/g,'0$1'),slots=[],seen=new Set();
+  const re=/([A-Za-z]{3,9})\W{0,3}(\d{1,2})\s*[:.;,]\s*(\d{2})\s*[-–—~=]+\s*(\d{1,2})\s*[:.;,]\s*(\d{2})/g;let m;
+  while((m=re.exec(dt))){const dow=DM[m[1].slice(0,2).toLowerCase()];if(dow===undefined||seen.has(dow))continue;const h1=+m[2],n1=+m[3],h2=+m[4],n2=+m[5];if(h1>23||h2>23||n1>59||n2>59)continue;const st=p2(h1)+':'+p2(n1),en=p2(h2)+':'+p2(n2);if(en<=st)continue;seen.add(dow);slots.push({dow,st,en})}
+  if(code&&slots.length)rows.push({code,company,slots});else skipped++}
+ return{rows,skipped}}
+async function importShot(file){
+ if(!file)return;
+ try{
+  shotMsg('Preparing the image…',.05);const cv=await shotCanvas(file);
+  shotMsg('Loading the text reader (first time can take a minute)…',.1);const T=await loadTess();
+  const w=await T.createWorker('eng',1,{logger:m=>{if(m.status==='recognizing text')shotMsg('Reading your screenshot…',.3+.7*m.progress)}});
+  await w.setParameters({tessedit_pageseg_mode:'11',preserve_interword_spaces:'1'});
+  const r=await w.recognize(cv);await w.terminate();
+  const o=parseShot(shotWords(r.data));
+  if(o.err)return shotMsg(o.err+'<p><button class="g b" onclick="closeSheet()">Close</button></p>');
+  if(!o.rows.length)return shotMsg('I could not find any classes with days and times in that image. Try a sharper, closer screenshot of just the table.'+'<p><button class="g b" onclick="closeSheet()">Close</button></p>');
+  const have=new Set(classes.map(c=>(c.code||'').toLowerCase().replace(/\s+/g,'')));
+  _imp=o.rows.map(x=>({...x,on:!have.has(x.code.toLowerCase().replace(/\s+/g,'')),dup:have.has(x.code.toLowerCase().replace(/\s+/g,''))}));
+  _impSkip=o.skipped;impSheet()
+ }catch(e){shotMsg('Something went wrong: '+esc(e.message||String(e))+'<p><button class="g b" onclick="closeSheet()">Close</button></p>')}}
+let _impSkip=0;
+const impSlotTxt=s=>s.map(x=>DN[x.dow].slice(0,3)+' '+x.st+'–'+x.en).join(', ');
+function impSheet(){
+ const g=(id,d)=>($('#'+id)||{}).value??d,rate=g('im_rate',18),cu=g('im_cur','EUR'),from=g('im_from',ymd(new Date()));
+ sheet(`<h3>Import from screenshot</h3><p class="mu">I found ${_imp.length} class${_imp.length===1?'':'es'}. Check the codes and names, untick any you don't want, then add them. Times are saved as the student's time (Spain) and shown in South African time.</p>
+ <div class="g2"><div><label>Rate for all</label><input type="number" step="0.01" id="im_rate" value="${rate}"></div><div><label>Currency</label><select id="im_cur">${['EUR','ZAR','ILS'].map(c=>`<option ${c===cu?'selected':''}>${c}</option>`).join('')}</select></div></div>
+ <label>Starts on</label><input type="date" id="im_from" value="${from}">
+ ${_imp.map((r,i)=>`<div class="card" style="margin-top:8px"><label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" ${r.on?'checked':''} onchange="_imp[${i}].on=this.checked"><b>Add this class</b>${r.dup?' <span class="mu">(code already exists)</span>':''}</label><label>Code</label><input value="${esc(r.code)}" oninput="_imp[${i}].code=this.value"><label>Company</label><input value="${esc(r.company)}" oninput="_imp[${i}].company=this.value"><p class="mu" style="margin:6px 0 0">${impSlotTxt(r.slots)}</p></div>`).join('')}
+ ${_impSkip?`<p class="mu">${_impSkip} row${_impSkip===1?'':'s'} skipped because no days and times could be read.</p>`:''}
+ <div class="row" style="margin-top:10px"><button class="b" onclick="addImported()">Add selected classes</button><button class="g b" onclick="closeSheet()">Cancel</button></div>`)}
+function addImported(){
+ const rate=+$('#im_rate').value,cu=$('#im_cur').value,from=$('#im_from').value;
+ if(!(rate>=0)||$('#im_rate').value==='')return alert('Please enter a rate');if(!from)return alert('Please choose a start date');
+ const pick=_imp.filter(r=>r.on&&r.code.trim());if(!pick.length)return alert('Nothing selected');
+ pick.forEach((r,n)=>{const d={code:r.code.trim(),company:r.company.trim(),kind:'astex',tz:'Europe/Madrid',slots:r.slots.map(x=>({...x})),dow:r.slots[0].dow,st:r.slots[0].st,en:r.slots[0].en,rate,per:'hour',cur:cu,notes:'',recur:true,from,once:null};save('c_'+Date.now().toString(36)+n.toString(36),d)});
+ closeSheet();alert(pick.length+' class'+(pick.length===1?'':'es')+' added.')}
 function dupC(id){const c={...classes.find(x=>x.id===id)};delete c.id;delete c.until;c.code+=' (copy)';save('c_'+Date.now().toString(36),c);closeSheet()}
 function togC(id){const c={...classes.find(x=>x.id===id)};delete c.id;if(c.until)delete c.until;else c.until=ymd(new Date());save(id,c);closeSheet()}
 async function delC(id){if(!confirm('Delete this class and its attendance records? Deactivate instead to keep history.'))return;await col().doc(id).delete();for(const k of Object.keys(att))if(k.startsWith(id+'_'))await col().doc('a_'+k).delete();closeSheet()}

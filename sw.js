@@ -1,5 +1,5 @@
 // Bump V on every release so phones pick up the new version.
-const V='v33';
+const V='v34';
 const SHELL=['./','index.html','manifest.webmanifest','firebase-config.js','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)))});
 self.addEventListener('message',e=>{if(e.data==='skip')self.skipWaiting()});
