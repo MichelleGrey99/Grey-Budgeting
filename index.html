@@ -42,7 +42,7 @@ h2,h3,th,.xh{text-transform:uppercase;letter-spacing:.04em}
 .idoc .ib{font:700 14px "Times New Roman",serif;margin-top:34px}
 @media print{nav,#bell,#bg,#menuBtn,#hdr,.noprint{display:none!important}body,html{background:#fff!important;padding:0}#app{padding:0;max-width:none}.idoc{border:0;margin:0}}
 nav button.logo{flex:0 0 62px;padding:4px}nav button.logo img{width:46px;height:46px;border-radius:10px;display:block;margin:auto;box-shadow:0 1px 6px rgba(0,0,0,.3)}
-#menuBtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 30px);right:10px;z-index:9;padding:0;border:0;background:none}#menuBtn img{height:34px;width:auto;display:block;filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
+#menuBtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 30px);right:10px;z-index:9;padding:0;border:0;background:none}#menuBtn img{height:40px;width:auto;display:block;filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
 #hdr{text-align:center;padding-top:14px}#hdr img{height:66px;width:auto;max-width:58vw;display:inline-block;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
 #bell{left:10px !important;right:auto !important;top:calc(env(safe-area-inset-top,0px) + 27px) !important}
 #app{padding-top:8px}
@@ -53,7 +53,7 @@ option{background:#00032e;color:#fff}
 .idoc.st .it{margin-bottom:6px}.idoc.st h4{margin:22px 0 6px;font-size:13px;letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid #000;padding-bottom:4px}.idoc.st table{margin-top:0;table-layout:auto}.idoc.st td{border:0;border-bottom:1px solid #ddd;text-align:left;padding:8px 4px;font-size:13px}.idoc.st td:last-child{text-align:right;white-space:nowrap}.idoc.st tr.tt td{font-weight:700;border-bottom:2px solid #000}
 .mu{font-size:14.5px}label{font-size:13.5px}nav button{font-size:12.5px}.tag{font-size:13.5px}.chip{font-size:14px}.cols2 .card{font-size:14px}.cols2 .chip{font-size:13.5px}.xr input,.xr select{font-size:13.5px}
 </style></head><body>
-<div id="bg"></div><button id="menuBtn" onclick="openMenu()" style="display:none" aria-label="Menu"><img src="logo-white.png" alt="Menu"></button><button id="bell" onclick="tab='dash';render()" style="display:none" aria-label="Needs your answer"></button><div id="hdr"><img src="logo-white.png" alt="Grey Budgeting"></div><div id="app">Loading…</div><div id="sheet"></div><nav id="nav"></nav>
+<div id="bg"></div><button id="menuBtn" onclick="openMenu()" style="display:none" aria-label="Menu"><img src="menu.png" alt="Menu"></button><button id="bell" onclick="tab='dash';render()" style="display:none" aria-label="Needs your answer"></button><div id="hdr"><img src="logo-white.png" alt="Grey Budgeting"></div><div id="app">Loading…</div><div id="sheet"></div><nav id="nav"></nav>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script><script src="firebase-config.js"></script>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
