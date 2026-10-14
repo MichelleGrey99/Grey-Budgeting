@@ -1,5 +1,6 @@
 // Values from Firebase console > Project settings. These are not secrets.
 window.FB = {
+ multi: true,
   config: {
     apiKey: "AIzaSyALcPDIIMrSN6INo-h9fIPAGf8aVav6Lh4",
     authDomain: "household-money-3826a.firebaseapp.com",
