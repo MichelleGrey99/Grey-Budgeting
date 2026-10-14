@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>Household Money</title>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#6d4aff"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#00032e"><link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#faf8f5;--card:#fff;--tx:#222;--mu:#777;--bd:#e6e1da;--ac:#6d4aff;--pr:#2f6fed;--ok:#1f9d55;--no:#d64545;--pe:#d98a00}
@@ -41,6 +41,7 @@ h2,h3,th,.xh{text-transform:uppercase;letter-spacing:.04em}
 .idoc .itot{display:flex;justify-content:flex-end;align-items:flex-start;gap:30px;margin-top:6px;font-size:12px}.idoc .itot>div{border:1px solid #000;min-width:23%;padding:8px;text-align:center}.idoc .itot span{padding-top:6px}
 .idoc .ib{font:700 14px "Times New Roman",serif;margin-top:34px}
 @media print{nav,#bell,#bg,.noprint{display:none!important}body,html{background:#fff!important;padding:0}#app{padding:0;max-width:none}.idoc{border:0;margin:0}}
+nav button.logo{flex:0 0 62px;padding:4px}nav button.logo img{width:46px;height:46px;border-radius:10px;display:block;margin:auto;box-shadow:0 1px 6px rgba(0,0,0,.3)}
 </style></head><body>
 <div id="bg"></div><button id="bell" onclick="tab='dash';render()" style="display:none" aria-label="Needs your answer"></button><div id="app">Loading…</div><div id="sheet"></div><nav id="nav"></nav>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script><script src="firebase-config.js"></script>
@@ -84,7 +85,7 @@ const DEFNAV=['dash','trk','inv','sch','bud'];let navPick=null;
 function openMenu(){const pin=navPick||DEFNAV;sheet(`<h3>Menu</h3><p class="mu">Tap a tab to open it. Use the switch to show or hide it in the bottom bar.</p>${TABS.map(([k,i,l])=>`<div class="row" style="padding:6px 0;border-bottom:1px solid var(--bd)"><button class="g b sp" style="text-align:left;display:flex;gap:10px;align-items:center;border:0" onclick="tab='${k}';closeSheet();render()">${i}<span>${l}</span></button><label style="margin:0;display:flex;align-items:center;gap:6px"><span class="mu">Bottom bar</span><input type="checkbox" ${pin.includes(k)?'checked':''} onchange="pinTab('${k}',this.checked)"></label></div>`).join('')}<p><button class="g b" onclick="closeSheet()">Close</button></p>`)}
 function pinTab(k,on){let p=[...(navPick||DEFNAV)];p=on?[...new Set([...p,k])]:p.filter(x=>x!==k);if(!p.length)p=['dash'];navPick=p;col().doc('nv').set({nav:p});render()}
 function render(){const ae=document.activeElement;if(ae&&(ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&/^(text|number|search|email|password|tel|url)$/.test(ae.type)))&&$('#app').contains(ae)){pend=true;return}pend=false;if(!uid){$('#nav').innerHTML='';$('#app').innerHTML=loginHtml();return}pub();const pn=me?pendingList().length:0;$('#bell').style.display=pn?'flex':'none';$('#bell').innerHTML=BELL+`<span class="bdg">${pn}</span>`;
- const pinned=navPick||DEFNAV,show=TABS.filter(t=>pinned.includes(t[0])||t[0]===tab);$('#nav').innerHTML=show.map(([k,i,l])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()"><b>${i}</b>${l}</button>`).join('')+`<button onclick="openMenu()"><b>${ic('M4 6h16M4 12h16M4 18h16')}</b>Menu</button>`;
+ const pinned=navPick||DEFNAV,show=TABS.filter(t=>pinned.includes(t[0])||t[0]===tab);$('#nav').innerHTML=show.map(([k,i,l])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()"><b>${i}</b>${l}</button>`).join('')+`<button onclick="openMenu()"><b>${ic('M4 6h16M4 12h16M4 18h16')}</b>Menu</button><button class="logo" onclick="tab='dash';render()" aria-label="Grey Budgeting - Home"><img src="logo.png" alt="Grey Budgeting"></button>`;
  if(!me){$('#app').innerHTML=`<div class="card"><h2>Who are you?</h2><p class="mu">Each person gets a private salary tracker. Pick your name once on this account.</p><div class="row">${['Michelle','Gustav'].map(n=>{const t=Object.entries(profiles).find(([i,p])=>p.name===n&&i!==uid);return`<button class="b" ${t?'disabled':''} onclick="pick('${n}')">${n}${t?' (taken)':''}</button>`}).join('')}</div></div>`;return}
  $('#app').innerHTML={dash:vDash,trk:vTrk,inv:vInv,sch:vSch,shr:vShr,hk:vHk,debt:vDebt,sav:vSav,bud:vBud,plan:vPlan,set:vSet}[tab]()}
 document.addEventListener('focusout',()=>setTimeout(()=>{if(pend)render()},300));
