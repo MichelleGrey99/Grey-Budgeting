@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>Household Money</title>
-<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#00032e"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#00032e"><link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#faf8f5;--card:#fff;--tx:#222;--mu:#777;--bd:#e6e1da;--ac:#6d4aff;--pr:#2f6fed;--ok:#1f9d55;--no:#d64545;--pe:#d98a00}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17161a;--card:#222126;--tx:#eee;--mu:#9a98a0;--bd:#37353c;--ac:#9b86ff;--pr:#6b9bff;--ok:#43c47c;--no:#ef6a6a;--pe:#f0a93a}}
 :root[data-theme="dark"]{--bg:#17161a;--card:#222126;--tx:#eee;--mu:#9a98a0;--bd:#37353c;--ac:#9b86ff;--pr:#6b9bff;--ok:#43c47c;--no:#ef6a6a;--pe:#f0a93a}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,var(--bg),color-mix(in srgb,var(--ac) 10%,var(--bg))) fixed;color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:70px}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,var(--bg),color-mix(in srgb,var(--ac) 10%,var(--bg))) fixed;color:var(--tx);font:15px/1.4 "League Spartan",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:70px}
 #app{max-width:760px;margin:auto;padding:12px}
 nav{position:fixed;bottom:0;left:0;right:0;display:flex;overflow-x:auto;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
 nav button{flex:1 0 64px;border:0;background:none;color:var(--mu);padding:10px 2px;font-size:11px}nav button.on{color:var(--ac);font-weight:700}
@@ -28,7 +28,7 @@ label{display:block;font-size:12px;color:var(--mu);margin-top:8px}label+input,la
 #bg{position:fixed;inset:0;z-index:-1;background-size:cover;background-position:center;pointer-events:none}
 h2,h3,th,.xh{text-transform:uppercase;letter-spacing:.04em}
 .card{box-shadow:0 2px 12px rgba(0,0,0,.10)}button.b,.b{border-radius:10px}
-.hasbg .card{background:color-mix(in srgb,var(--card) 80%,transparent);backdrop-filter:blur(6px)}
+.hasbg .card{background:#00032e}
 .hasbg nav{background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(8px)}
 #bell{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:12px;z-index:8;width:40px;height:40px;border-radius:20px;border:1px solid var(--bd);background:var(--card);color:var(--no);align-items:center;justify-content:center;padding:0}
 #bell .bdg{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--no);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px}
@@ -45,7 +45,10 @@ nav button.logo{flex:0 0 62px;padding:4px}nav button.logo img{width:46px;height:
 #menuBtn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);right:10px;z-index:9;width:46px;height:46px;padding:0;border-radius:12px;border:1px solid var(--bd);overflow:hidden;background:#00032e;box-shadow:0 2px 10px rgba(0,0,0,.35)}#menuBtn img{width:100%;height:100%;display:block}
 #bell{right:64px !important;top:calc(env(safe-area-inset-top,0px) + 9px) !important}
 #app{padding-top:60px}
-:root.hasbg{--bg:#0b0b24;--card:#1a1a38;--tx:#eeeeee;--mu:#a5a3b8;--bd:#34335a;--ac:#9b86ff;--pr:#6b9bff;--ok:#43c47c;--no:#ef6a6a;--pe:#f0a93a}
+:root.hasbg{--bg:#0b0b24;--card:#00032e;--tx:#ffffff;--mu:#a5a3b8;--bd:#34335a;--ac:#9b86ff;--pr:#6b9bff;--ok:#43c47c;--no:#ef6a6a;--pe:#f0a93a}
+button,input,select,textarea{font-family:inherit}
+.hasbg input,.hasbg select,.hasbg textarea{background:rgba(255,255,255,.08);color:#fff}
+option{background:#00032e;color:#fff}
 </style></head><body>
 <div id="bg"></div><button id="menuBtn" onclick="openMenu()" style="display:none" aria-label="Menu"><img src="logo.png" alt="Menu"></button><button id="bell" onclick="tab='dash';render()" style="display:none" aria-label="Needs your answer"></button><div id="app">Loading…</div><div id="sheet"></div><nav id="nav"></nav>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script><script src="firebase-config.js"></script>
@@ -88,10 +91,13 @@ function save(id,d){return col().doc(id).set(d)}
 function pub(){if(!me)return;const months={};for(let i=-1;i<=6;i++){const k=addM(ymd(new Date()).slice(0,7),i),t=tot(k);months[k]={done:t.done,pred:t.pred,mdone:t.md,mpred:t.mp,cl:t.cl}}const sch=classes.map(c=>({id:c.id,code:c.code,kind:(c.kind==='pvt'||/^\s*pvt/i.test(c.company||''))?'pvt':'astex',tz:tzOf(c),slots:slotsOf(c),dow:c.dow,st:c.st,en:c.en,recur:c.recur!==false,from:c.from||null,once:c.once||null,until:c.until||null}));const s=JSON.stringify({months,sch});if(s===lastPub)return;lastPub=s;sums[uid]={name:me.name,months,sch};db.doc(H('summaries/'+uid)).set({name:me.name,months,sch}).catch(()=>{})}
 const TABS=[['dash',ic('M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10'),'Home'],['trk',ic('M4 5h16v15H4zM4 10h16M9 3v4M15 3v4'),'My classes'],['inv',ic('M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6'),'Invoice'],['sch',ic('M12 7v5l3 2M12 3a9 9 0 100 18 9 9 0 000-18'),'Schedule'],['shr',ic('M4 4h7v16H4zM13 4h7v16h-7z'),'Shared'],['bud',ic('M3 7h18v12H3zM3 11h18M7 15h3'),'Budget'],['hk',ic('M5 21V9l7-6 7 6v12M9 21v-6h6v6'),'House'],['debt',ic('M12 3v18M16 7H10a3 3 0 000 6h4a3 3 0 010 6H8'),'Debt'],['sav',ic('M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 7v5c0 1.7 3.6 3 8 3s8-1.3 8-3V7'),'Savings'],['plan',ic('M3 20h18M6 16v-5M11 16V7M16 16v-8M21 16v-3'),'Planner'],['set',ic('M4 7h10M18 7h2M4 17h2M10 17h10M16 4v6M8 14v6'),'Settings']];
 const DEFNAV=['dash','trk','inv','sch','bud'];let navPick=null;
-function openMenu(){const pin=navPick||DEFNAV;sheet(`<h3>Menu</h3><p class="mu">Tap a tab to open it. Use the switch to show or hide it in the bottom bar.</p>${TABS.map(([k,i,l])=>`<div class="row" style="padding:6px 0;border-bottom:1px solid var(--bd)"><button class="g b sp" style="text-align:left;display:flex;gap:10px;align-items:center;border:0" onclick="tab='${k}';closeSheet();render()">${i}<span>${l}</span></button><label style="margin:0;display:flex;align-items:center;gap:6px"><span class="mu">Bottom bar</span><input type="checkbox" ${pin.includes(k)?'checked':''} onchange="pinTab('${k}',this.checked)"></label></div>`).join('')}<p><button class="g b" onclick="closeSheet()">Close</button></p>`)}
+const FIX=['dash','sch','bud'];
+function openAdd(){const ex=(navPick||[]).filter(k=>!FIX.includes(k));sheet(`<h3>Add to the bottom bar</h3><p class="mu">Home, Schedule and Budget are always there. Add any other tab you want one tap away.</p>${TABS.filter(t=>!FIX.includes(t[0])).map(([k,i,l])=>`<div class="row" style="padding:8px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--ac)">${i}</span><span class="sp">${l}</span>${ex.includes(k)?`<button class="b" style="background:var(--no);color:#fff" onclick="barTog('${k}')">Remove</button>`:`<button class="b" style="background:var(--ok);color:#fff" onclick="barTog('${k}')">Add</button>`}</div>`).join('')}<p><button class="g b" onclick="closeSheet()">Done</button></p>`)}
+function barTog(k){let p=(navPick||[]).filter(x=>!FIX.includes(x));p=p.includes(k)?p.filter(x=>x!==k):[...p,k];navPick=p;col().doc('nv').set({nav:p});render();openAdd()}
+function openMenu(){sheet(`<h3>Menu</h3>${TABS.map(([k,i,l])=>`<button style="width:100%;display:flex;gap:14px;align-items:center;text-align:left;border:0;border-bottom:1px solid var(--bd);border-radius:0;background:${tab===k?'rgba(155,134,255,.22)':'transparent'};color:var(--tx);padding:14px 8px;font-size:16px" onclick="tab='${k}';closeSheet();render()"><span style="color:var(--ac)">${i}</span><span>${l}</span></button>`).join('')}<p><button class="g b" onclick="closeSheet()">Close</button></p>`)}
 function pinTab(k,on){let p=[...(navPick||DEFNAV)];p=on?[...new Set([...p,k])]:p.filter(x=>x!==k);if(!p.length)p=['dash'];navPick=p;col().doc('nv').set({nav:p});render()}
 function render(){const ae=document.activeElement;if(ae&&(ae.tagName==='TEXTAREA'||(ae.tagName==='INPUT'&&/^(text|number|search|email|password|tel|url)$/.test(ae.type)))&&$('#app').contains(ae)){pend=true;return}pend=false;if(!uid){$('#nav').innerHTML='';$('#app').innerHTML=loginHtml();return}pub();const pn=me?pendingList().length:0;$('#menuBtn').style.display=me?'block':'none';$('#bell').style.display=pn?'flex':'none';$('#bell').innerHTML=BELL+`<span class="bdg">${pn}</span>`;
- const pinned=navPick||DEFNAV,show=TABS.filter(t=>pinned.includes(t[0])||t[0]===tab);$('#nav').innerHTML=show.map(([k,i,l])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()"><b>${i}</b>${l}</button>`).join('');
+ const extra=(navPick||[]).filter(k=>!FIX.includes(k)),show=[...FIX,...extra].map(k=>TABS.find(t=>t[0]===k)).filter(Boolean);$('#nav').innerHTML=show.map(([k,i,l])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()"><b>${i}</b>${l}</button>`).join('')+`<button onclick="openAdd()"><b>${ic('M12 5v14M5 12h14')}</b>Add</button>`;
  if(!me){$('#app').innerHTML=MULTI?onboardHtml():whoHtml();return}
  $('#app').innerHTML={dash:vDash,trk:vTrk,inv:vInv,sch:vSch,shr:vShr,hk:vHk,debt:vDebt,sav:vSav,bud:vBud,plan:vPlan,set:vSet}[tab]()}
 document.addEventListener('focusout',()=>setTimeout(()=>{if(pend)render()},300));
