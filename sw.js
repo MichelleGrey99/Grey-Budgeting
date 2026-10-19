@@ -1,5 +1,5 @@
 // Bump V on every release so phones pick up the new version.
-const V='v44';
+const V='v45';
 const SHELL=['./','index.html','app.webmanifest','firebase-config.js','app-icon-192.png','app-icon-512.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>Promise.all(SHELL.map(u=>c.add(u).catch(()=>{})))))});
 self.addEventListener('message',e=>{if(e.data==='skip')self.skipWaiting()});
